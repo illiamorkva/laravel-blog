@@ -122,6 +122,7 @@ return [
     */
 
     'providers' => [
+        Intervention\Image\ImageServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         GrahamCampbell\Markdown\MarkdownServiceProvider::class,
 
@@ -173,6 +174,7 @@ return [
     */
 
     'aliases' => [
+        'Image' => Intervention\Image\Facades\Image::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
