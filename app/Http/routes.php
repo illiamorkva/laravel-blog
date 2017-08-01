@@ -44,3 +44,5 @@ Route::delete('/backend/blog/force-destroy/{blog}', [
     'as' => 'backend.blog.force-destroy'
 ]);
 Route::resource('/backend/blog', 'Backend\BlogController');
+
+Route::resource('/backend/categories', 'Backend\CategoriesController');
