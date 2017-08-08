@@ -34,6 +34,8 @@ Route::get('/author/{author}', [
 Route::auth();
 
 Route::get('/home', 'Backend\HomeController@index');
+Route::get('/edit-account', 'Backend\HomeController@edit');
+Route::put('/edit-account', 'Backend\HomeController@update');
 
 Route::put('/backend/blog/restore/{blog}', [
     'uses' => 'Backend\BlogController@restore',
@@ -44,3 +46,11 @@ Route::delete('/backend/blog/force-destroy/{blog}', [
     'as' => 'backend.blog.force-destroy'
 ]);
 Route::resource('/backend/blog', 'Backend\BlogController');
+
+Route::resource('/backend/categories', 'Backend\CategoriesController');
+
+Route::get('/backend/users/confirm/{users}', [
+    'uses' => 'Backend\UsersController@confirm',
+    'as' => 'backend.users.confirm'
+]);
+Route::resource('/backend/users', 'Backend\UsersController');

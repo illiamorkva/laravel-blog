@@ -9,7 +9,6 @@ use Intervention\Image\Facades\Image;
 
 class BlogController extends BackendController
 {
-    protected $limit = 5;
     protected $uploadPath;
 
     public function __construct()
@@ -44,19 +43,24 @@ class BlogController extends BackendController
             $posts = Post::draft()->with('category', 'author')->latest()->paginate($this->limit);
             $postCount = Post::draft()->count();
         }
+        elseif($status == 'own'){
+            $posts = $request->user()->posts()->with('category', 'author')->latest()->paginate($this->limit);
+            $postCount = $request->user()->posts()->count();
+        }
         else{
             $posts = Post::with('category', 'author')->latest()->paginate($this->limit);
             $postCount = Post::count();
         }
 
-        $statusList = $this->statusList();
+        $statusList = $this->statusList($request);
 
         return view("backend.blog.index",compact('posts', 'postCount', 'onlyTrashed', 'statusList'));
     }
 
-    private function statusList()
+    private function statusList($request)
     {
         return [
+            'own' => $request->user()->posts()->count(),
             'all' => Post::count(),
             'published' => Post::published()->count(),
             'scheduled' => Post::scheduled()->count(),
