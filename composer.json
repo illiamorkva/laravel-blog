@@ -10,7 +10,8 @@
         "graham-campbell/markdown": "^7.1",
         "laravelcollective/html": "5.2",
         "intervention/image": "^2.4",
-        "santigarcor/laratrust": "3.0.*"
+        "santigarcor/laratrust": "3.0.*",
+        "barryvdh/laravel-debugbar": "^2.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
