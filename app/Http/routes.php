@@ -31,6 +31,11 @@ Route::get('/author/{author}', [
     'as' => 'author'
 ]);
 
+Route::get('/tag/{tag}', [
+    'uses' => 'BlogController@tag',
+    'as' => 'tag'
+]);
+
 Route::auth();
 
 Route::get('/home', 'Backend\HomeController@index');
