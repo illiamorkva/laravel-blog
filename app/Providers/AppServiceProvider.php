@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Category;
+use App\Events\CategoryCreated;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Category::created(function ($item) {
+            Event::fire(new CategoryCreated($item));
+        });
     }
 
     /**
