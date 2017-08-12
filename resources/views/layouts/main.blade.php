@@ -58,6 +58,16 @@
             </div>
         </footer>
 
+        <script src="/js/jquery.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/notify.min.js"></script>
+        <script src="//js.pusher.com/3.0/pusher.min.js"></script>
+        <script>
+            var pusher = new Pusher("{{ env('PUSHER_KEY') }}",{
+                cluster: 'eu',
+                encrypted: true
+            });
+        </script>
+        <script src="js/pusher.js"></script>
     </body>
     </html>
