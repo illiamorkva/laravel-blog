@@ -6,8 +6,6 @@ use App\Category;
 use App\Post;
 use App\Tag;
 use App\User;
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 class BlogController extends Controller
@@ -22,7 +20,7 @@ class BlogController extends Controller
                         ->filter(request()->only(['term', 'year', 'month']))
                         ->simplePaginate($this->limit);
 
-        return view("blog.index",compact('posts'));
+        return view("blog.index", compact('posts'));
     }
 
     public function category(Category $category)
@@ -35,7 +33,7 @@ class BlogController extends Controller
                           ->published()
                           ->simplePaginate($this->limit);
 
-        return view("blog.index",compact('posts', 'categoryName'));
+        return view("blog.index", compact('posts', 'categoryName'));
     }
 
     public function tag(Tag $tag)
@@ -48,7 +46,7 @@ class BlogController extends Controller
                           ->published()
                           ->simplePaginate($this->limit);
 
-        return view("blog.index",compact('posts', 'tagName'));
+        return view("blog.index", compact('posts', 'tagName'));
     }
 
     public function author(User $author)
@@ -61,7 +59,7 @@ class BlogController extends Controller
             ->published()
             ->simplePaginate($this->limit);
 
-        return view("blog.index",compact('posts', 'authorName'));
+        return view("blog.index", compact('posts', 'authorName'));
     }
 
     public function show(Post $post)
