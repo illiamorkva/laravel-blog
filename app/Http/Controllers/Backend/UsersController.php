@@ -37,7 +37,7 @@ class UsersController extends BackendController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Requests\UserStoreRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\UserStoreRequest $request)
@@ -75,8 +75,8 @@ class UsersController extends BackendController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param Requests\UserUpdateRequest|Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Requests\UserUpdateRequest $request, $id)
@@ -93,7 +93,8 @@ class UsersController extends BackendController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Requests\UserDestroyRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Requests\UserDestroyRequest $request, $id)
@@ -103,11 +104,10 @@ class UsersController extends BackendController
         $deleteOption = $request->delete_option;
         $selectedUser = $request->selected_user;
 
-        if($deleteOption == "delete"){
+        if ($deleteOption == "delete") {
             // delete user posts
             $user->posts()->withTrashed()->forceDelete();
-        }
-        elseif($deleteOption == "attribute"){
+        } elseif ($deleteOption == "attribute") {
             $user->posts()->update(['author_id' => $selectedUser]);
         }
 
@@ -116,6 +116,11 @@ class UsersController extends BackendController
         return redirect("/backend/users")->with("message", "User was deleted successfully!");
     }
 
+    /**
+     * @param Requests\UserDestroyRequest $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function confirm(Requests\UserDestroyRequest $request, $id)
     {
         $user = User::findOrFail($id);

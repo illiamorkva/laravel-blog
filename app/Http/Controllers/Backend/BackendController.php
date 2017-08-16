@@ -14,7 +14,7 @@ class BackendController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @return \App\Http\Controllers\Backend\BackendController
      */
     public function __construct()
     {
