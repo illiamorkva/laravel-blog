@@ -26,35 +26,30 @@ class BlogController extends BackendController
     {
         $onlyTrashed = false;
 
-        if(($status = $request->get('status')) && $status == 'trash'){
+        if (($status = $request->get('status')) && $status == 'trash') {
             $posts = Post::onlyTrashed()->with('category', 'author')->latest()->paginate($this->limit);
             $postCount = Post::onlyTrashed()->count();
             $onlyTrashed = true;
-        }
-        elseif($status == 'published'){
+        } elseif ($status == 'published') {
             $posts = Post::published()->with('category', 'author')->latest()->paginate($this->limit);
             $postCount = Post::published()->count();
-        }
-        elseif($status == 'scheduled'){
+        } elseif ($status == 'scheduled') {
             $posts = Post::scheduled()->with('category', 'author')->latest()->paginate($this->limit);
             $postCount = Post::scheduled()->count();
-        }
-        elseif($status == 'draft'){
+        } elseif ($status == 'draft') {
             $posts = Post::draft()->with('category', 'author')->latest()->paginate($this->limit);
             $postCount = Post::draft()->count();
-        }
-        elseif($status == 'own'){
+        } elseif ($status == 'own') {
             $posts = $request->user()->posts()->with('category', 'author')->latest()->paginate($this->limit);
             $postCount = $request->user()->posts()->count();
-        }
-        else{
+        } else {
             $posts = Post::with('category', 'author')->latest()->paginate($this->limit);
             $postCount = Post::count();
         }
 
         $statusList = $this->statusList($request);
 
-        return view("backend.blog.index",compact('posts', 'postCount', 'onlyTrashed', 'statusList'));
+        return view("backend.blog.index", compact('posts', 'postCount', 'onlyTrashed', 'statusList'));
     }
 
     private function statusList($request)
@@ -82,7 +77,7 @@ class BlogController extends BackendController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Requests\PostRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\PostRequest $request)
@@ -98,14 +93,14 @@ class BlogController extends BackendController
     {
         $data = $request->all();
 
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $fileName = $image->getClientOriginalName();
             $destination = $this->uploadPath;
 
             $successUploaded = $image->move($destination, $fileName);
 
-            if($successUploaded){
+            if ($successUploaded) {
                 $width = config('cms.image.thumbnail.width');
                 $height = config('cms.image.thumbnail.height');
                 $extension = $image->getClientOriginalExtension();
@@ -148,8 +143,8 @@ class BlogController extends BackendController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param Requests\PostRequest|Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Requests\PostRequest $request, $id)
@@ -159,7 +154,7 @@ class BlogController extends BackendController
         $data = $this->handleRequest($request);
         $post->update($data);
 
-        if($oldImage !== $post->image){
+        if ($oldImage !== $post->image) {
             $this->removeImage($oldImage);
         }
         return redirect('/backend/blog')->with('message', 'Your post was updated successfully!');
@@ -198,14 +193,18 @@ class BlogController extends BackendController
 
     public function removeImage($image)
     {
-        if( ! empty($image) ){
+        if (!empty($image)) {
             $imagePath = $this->uploadPath . '/' . $image;
             $ext = substr(strrchr($image, '.'), 1);
             $thumbnail = str_replace(".{$ext}", "_thumb.{$ext}", $image);
             $thumbnailPath = $this->uploadPath . '/' . $thumbnail;
 
-            if(file_exists($imagePath)) unlink($imagePath);
-            if(file_exists($thumbnailPath)) unlink($thumbnailPath);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+            if (file_exists($thumbnailPath)) {
+                unlink($thumbnailPath);
+            }
         }
     }
 }
