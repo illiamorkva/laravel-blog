@@ -3,7 +3,7 @@
 
     <div class="comment-body padding-10">
         <ul class="comments-list">
-            @foreach($postComments as $comment)
+            @foreach ($postComments as $comment)
             <li class="comment-item">
                 <div class="comment-heading clearfix">
                     <div class="comment-author-meta">
@@ -26,22 +26,22 @@
 
     <div class="comment-footer padding-10">
         <h3>Leave a comment</h3>
-        <form>
+        {!! Form::open(['route' => ['blog.comments', $post->slug]]) !!}
             <div class="form-group required">
                 <label for="name">Name</label>
-                <input type="text" name="name" id="name" class="form-control">
+                {!! Form::text('author_name', null, ['class' => 'form-control']) !!}
             </div>
             <div class="form-group required">
                 <label for="email">Email</label>
-                <input type="text" name="email" id="email" class="form-control">
+                {!! Form::text('author_email', null, ['class' => 'form-control']) !!}
             </div>
             <div class="form-group">
                 <label for="website">Website</label>
-                <input type="text" name="website" id="website" class="form-control">
+                {!! Form::text('author_url', null, ['class' => 'form-control']) !!}
             </div>
             <div class="form-group required">
                 <label for="comment">Comment</label>
-                <textarea name="comment" id="comment" rows="6" class="form-control"></textarea>
+                {!! Form::textarea('body', null, ['row' => 6, 'class' => 'form-control']) !!}
             </div>
             <div class="clearfix">
                 <div class="pull-left">
@@ -54,7 +54,7 @@
                     </p>
                 </div>
             </div>
-        </form>
+        {!! Form::close() !!}
     </div>
 
 </article>

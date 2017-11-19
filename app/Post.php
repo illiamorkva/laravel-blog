@@ -41,6 +41,11 @@ class Post extends Model
         return $commentsNumber . " " . str_plural($label, $commentsNumber);
     }
 
+    public function createComment(array $data)
+    {
+        $this->comments()->create($data);
+    }
+
     public function setPublishedAtAttribute($value)
     {
         $this->attributes['published_at'] = $value ?: null;
@@ -50,10 +55,10 @@ class Post extends Model
     {
         $imageUrl = "";
 
-        if(!is_null($this->image)) {
+        if (!is_null($this->image)) {
             $directory = config('cms.image.directory');
             $imagePath = public_path() . "/{$directory}/" . $this->image;
-            if(file_exists($imagePath)) $imageUrl = asset("{$directory}/" . $this->image);
+            if (file_exists($imagePath)) $imageUrl = asset("{$directory}/" . $this->image);
         }
 
         return $imageUrl;
@@ -63,12 +68,12 @@ class Post extends Model
     {
         $imageUrl = "";
 
-        if(!is_null($this->image)) {
+        if (!is_null($this->image)) {
             $directory = config('cms.image.directory');
             $ext = substr(strrchr($this->image, '.'), 1);
             $thumbnail = str_replace(".{$ext}", "_thumb.{$ext}", $this->image);
             $imagePath = public_path() . "/{$directory}/" . $thumbnail;
-            if(file_exists($imagePath)) $imageUrl = asset("{$directory}/" . $thumbnail);
+            if (file_exists($imagePath)) $imageUrl = asset("{$directory}/" . $thumbnail);
         }
 
         return $imageUrl;
@@ -92,7 +97,7 @@ class Post extends Model
     public function getTagsHtmlAttribute()
     {
         $anchors = [];
-        foreach($this->tags as $tag) {
+        foreach ($this->tags as $tag) {
             $anchors[] = '<a href="' . route('tag', $tag->slug) . '">' . $tag->name . '</a>';
         }
         return implode(", ", $anchors);
@@ -101,19 +106,17 @@ class Post extends Model
     public function dateFormatted($showTimes = false)
     {
         $format = "d/m/Y";
-        if($showTimes) $format = $format . " H:i:s";
+        if ($showTimes) $format = $format . " H:i:s";
         return $this->created_at->format($format);
     }
 
     public function publicationLabel()
     {
-        if( ! $this->published_at) {
+        if (!$this->published_at) {
             return '<span class="label label-warning">Draft</span>';
-        }
-        elseif ($this->published_at && $this->published_at->isFuture()) {
+        } elseif ($this->published_at && $this->published_at->isFuture()) {
             return '<span class="label label-info">Schedule</span>';
-        }
-        else {
+        } else {
             return '<span class="label label-success">Published</span>';
         }
     }
@@ -146,10 +149,10 @@ class Post extends Model
     public static function archives()
     {
         return static::selectRaw('count(id) as post_count, year(published_at) year, monthname(published_at) month')
-                        ->published()
-                        ->groupBy('year', 'month')
-                        ->orderByRaw('min(published_at) desc')
-                        ->get();
+            ->published()
+            ->groupBy('year', 'month')
+            ->orderByRaw('min(published_at) desc')
+            ->get();
     }
 
     public function scopeFilter($query, $filter)
@@ -164,7 +167,7 @@ class Post extends Model
 
         //check if any term entered
         if (isset($filter['term']) && $term = $filter['term']) {
-            $query->where(function($q) use ($term) {
+            $query->where(function ($q) use ($term) {
                 /*$q->whereHas('author', function($qr) use ($term) {
                     $qr->where('name', 'LIKE', "%{$term}%");
                 });
