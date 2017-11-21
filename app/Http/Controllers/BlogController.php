@@ -6,8 +6,6 @@ use App\Category;
 use App\Post;
 use App\Tag;
 use App\User;
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 class BlogController extends Controller
@@ -16,13 +14,13 @@ class BlogController extends Controller
 
     public function index()
     {
-        $posts = Post::with('author', 'tags', 'category')
+        $posts = Post::with('author', 'tags', 'category', 'comments')
                         ->latestFirst()
                         ->published()
                         ->filter(request()->only(['term', 'year', 'month']))
                         ->simplePaginate($this->limit);
 
-        return view("blog.index",compact('posts'));
+        return view("blog.index", compact('posts'));
     }
 
     public function category(Category $category)
@@ -30,12 +28,12 @@ class BlogController extends Controller
         $categoryName = $category->title;
 
         $posts = $category->posts()
-                          ->with('author', 'tags')
+                          ->with('author', 'tags', 'comments')
                           ->latestFirst()
                           ->published()
                           ->simplePaginate($this->limit);
 
-        return view("blog.index",compact('posts', 'categoryName'));
+        return view("blog.index", compact('posts', 'categoryName'));
     }
 
     public function tag(Tag $tag)
@@ -43,12 +41,12 @@ class BlogController extends Controller
         $tagName = $tag->title;
 
         $posts = $tag->posts()
-                          ->with('author', 'category')
+                          ->with('author', 'category', 'comments')
                           ->latestFirst()
                           ->published()
                           ->simplePaginate($this->limit);
 
-        return view("blog.index",compact('posts', 'tagName'));
+        return view("blog.index", compact('posts', 'tagName'));
     }
 
     public function author(User $author)
@@ -56,18 +54,20 @@ class BlogController extends Controller
         $authorName = $author->name;
 
         $posts = $author->posts()
-            ->with('category', 'tags')
+            ->with('category', 'tags', 'comments')
             ->latestFirst()
             ->published()
             ->simplePaginate($this->limit);
 
-        return view("blog.index",compact('posts', 'authorName'));
+        return view("blog.index", compact('posts', 'authorName'));
     }
 
     public function show(Post $post)
     {
         $post->increment('view_count');
 
-        return view("blog.show", compact('post'));
+        $postComments = $post->comments()->simplePaginate(3);
+
+        return view("blog.show", compact('post', 'postComments'));
     }
 }
