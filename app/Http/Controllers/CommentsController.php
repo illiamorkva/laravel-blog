@@ -6,11 +6,11 @@ use App\Comment;
 use App\Post;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
+use App\Http\Requests\CommentStoreRequest;
 
 class CommentsController extends Controller
 {
-    public function store(Post $post, Request $request)
+    public function store(Post $post, CommentStoreRequest $request)
     {
         $post->createComment($request->all());
 
