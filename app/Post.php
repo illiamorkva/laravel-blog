@@ -48,18 +48,20 @@ class Post extends Model
 
     public function createTags($tagString)
     {
-        $tags = explode(",", $tagString);
-        $tagIds = [];
+        if (!empty($tagString)) {
+            $tags = explode(",", $tagString);
+            $tagIds = [];
 
-        foreach ($tags as $tag) {
-            $newTag = Tag::firstOrCreate(
-                ['slug' => str_slug($tag), 'name' => ucwords(trim($tag))]
-            );
+            foreach ($tags as $tag) {
+                $newTag = Tag::firstOrCreate(
+                    ['slug' => str_slug($tag), 'name' => ucwords(trim($tag))]
+                );
 
-            $tagIds[] = $newTag->id;
+                $tagIds[] = $newTag->id;
+            }
+
+            $this->tags()->sync($tagIds);
         }
-
-        $this->tags()->sync($tagIds);
     }
 
     public function getTagsListAttribute()
