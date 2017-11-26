@@ -59,7 +59,12 @@ class Post extends Model
             $tagIds[] = $newTag->id;
         }
 
-        $this->tags()->attach($tagIds);
+        $this->tags()->sync($tagIds);
+    }
+
+    public function getTagsListAttribute()
+    {
+        return $this->tags->pluck('name');
     }
 
     public function setPublishedAtAttribute($value)

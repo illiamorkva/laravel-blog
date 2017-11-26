@@ -1,5 +1,21 @@
+@section('style')
+    <link rel="stylesheet" href="/backend/plugins/tag-editor/jquery.tag-editor.css">
+@endsection
+
 @section('script')
+    <script src="/backend/plugins/tag-editor/jquery.caret.min.js"></script>
+    <script src="/backend/plugins/tag-editor/jquery.tag-editor.min.js"></script>
     <script type="text/javascript">
+        var options = {};
+
+        @if($post->exists)
+            options = {
+            initialTags: {!! $post->tags_list !!},
+        };
+        @endif
+
+        $('input[name=post_tags]').tagEditor(options);
+
         $('ul.pagination').addClass('no-margin pagination-sm');
 
         $('#title').on('blur', function(){

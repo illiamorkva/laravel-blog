@@ -94,6 +94,7 @@ class TagsController extends BackendController
     public function destroy($id)
     {
         $tag = Tag::findOrFail($id);
+        $tag->posts()->detach();
         $tag->delete();
 
         return redirect("/backend/tags")->with("message", "Tag was deleted successfully!");

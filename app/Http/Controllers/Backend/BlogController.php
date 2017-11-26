@@ -155,6 +155,7 @@ class BlogController extends BackendController
         $oldImage = $post->image;
         $data = $this->handleRequest($request);
         $post->update($data);
+        $post->createTags($data['post_tags']);
 
         if ($oldImage !== $post->image) {
             $this->removeImage($oldImage);
