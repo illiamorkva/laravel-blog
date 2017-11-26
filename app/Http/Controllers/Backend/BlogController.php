@@ -84,7 +84,9 @@ class BlogController extends BackendController
     {
         $data = $this->handleRequest($request);
 
-        $request->user()->posts()->create($data);
+        $newPost = $request->user()->posts()->create($data);
+
+        $newPost->createTags($data['post_tags']);
 
         return redirect('/backend/blog')->with('message', 'Your post was created successfully!');
     }

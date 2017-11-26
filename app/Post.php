@@ -46,6 +46,22 @@ class Post extends Model
         $this->comments()->create($data);
     }
 
+    public function createTags($tagString)
+    {
+        $tags = explode(",", $tagString);
+        $tagIds = [];
+
+        foreach ($tags as $tag) {
+            $newTag = Tag::firstOrCreate(
+                ['slug' => str_slug($tag), 'name' => ucwords(trim($tag))]
+            );
+
+            $tagIds[] = $newTag->id;
+        }
+
+        $this->tags()->attach($tagIds);
+    }
+
     public function setPublishedAtAttribute($value)
     {
         $this->attributes['published_at'] = $value ?: null;
