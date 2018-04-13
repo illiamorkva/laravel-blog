@@ -13,8 +13,8 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         //reset the users table
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        DB::table('users')->truncate();
+        //DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::table('users')->delete();
 
         //generate 3 users/author
         $faker = Factory::create();

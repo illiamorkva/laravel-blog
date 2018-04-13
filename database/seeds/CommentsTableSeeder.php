@@ -34,7 +34,7 @@ class CommentsTableSeeder extends Seeder
             }
         }
 
-        Comment::truncate();
+//        Comment::delete();
         Comment::insert($comments);
     }
 }

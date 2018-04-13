@@ -171,25 +171,41 @@ class Post extends Model
 
     public static function archives()
     {
-        return static::selectRaw('count(id) as post_count, year(published_at) year, month(published_at) month')
-            ->published()
-            ->groupBy('year', 'month')
-            ->orderByRaw('min(published_at) desc')
-            ->get();
+        if (env("DB_CONNECTION") == "pgsql") {
+            return static::selectRaw('count(id) as post_count, extract(year from published_at) as year, extract(month from published_at) as month')
+                ->published()
+                ->groupBy('year', 'month')
+                ->orderByRaw('min(published_at) desc')
+                ->get();
+        } else {
+            return static::selectRaw('count(id) as post_count, year(published_at) year, month(published_at) month')
+                ->published()
+                ->groupBy('year', 'month')
+                ->orderByRaw('min(published_at) desc')
+                ->get();
+        }
     }
 
     public function scopeFilter($query, $filter)
     {
         if (isset($filter['month']) && $month = $filter['month']) {
-            $query->whereRaw('month(published_at) = ?', [$month]);
+            if (env('DB_CONNECTION') == "pgsql") {
+                $query->whereRaw('extract (month from published_at) = ?', [$month]);
+            } else {
+                $query->whereRaw('month(published_at) = ?', [$month]);
+            }
         }
 
         if (isset($filter['year']) && $year = $filter['year']) {
-            $query->whereRaw('year(published_at) = ?', [$year]);
+            if (env('DB_CONNECTION') == "pgsql") {
+                $query->whereRaw('extract (year from published_at) = ?', [$year]);
+            } else {
+                $query->whereRaw('year(published_at) = ?', [$year]);
+            }
         }
 
         //check if any term entered
-        if (isset($filter['term']) && $term = $filter['term']) {
+        if (isset($filter['term']) && $term = strtolower($filter['term'])) {
             $query->where(function ($q) use ($term) {
                 /*$q->whereHas('author', function($qr) use ($term) {
                     $qr->where('name', 'LIKE', "%{$term}%");

@@ -13,7 +13,7 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tags')->truncate();
+        DB::table('tags')->delete();
 
         $php = new Tag();
         $php->name = "PHP";
