@@ -76,7 +76,7 @@
                             <ul class="categories">
                                @foreach($archives as $archive)
                                    <li>
-                                       <a href="{{ route('blog', ['month' => $archive->month, 'year' => $archive->year]) }}">{{ $archive->month . " " . $archive->year }}</a>
+                                       <a href="{{ route('blog', ['month' => $archive->month, 'year' => $archive->year]) }}">{{ month_name($archive->month) . " " . $archive->year }}</a>
                                        <span class="badge pull-right">{{ $archive->post_count }}</span>
                                    </li>
                                @endforeach

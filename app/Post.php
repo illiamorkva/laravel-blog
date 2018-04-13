@@ -171,7 +171,7 @@ class Post extends Model
 
     public static function archives()
     {
-        return static::selectRaw('count(id) as post_count, year(published_at) year, monthname(published_at) month')
+        return static::selectRaw('count(id) as post_count, year(published_at) year, month(published_at) month')
             ->published()
             ->groupBy('year', 'month')
             ->orderByRaw('min(published_at) desc')
@@ -181,7 +181,7 @@ class Post extends Model
     public function scopeFilter($query, $filter)
     {
         if (isset($filter['month']) && $month = $filter['month']) {
-            $query->whereRaw('month(published_at) = ?', [Carbon::parse($month)->month]);
+            $query->whereRaw('month(published_at) = ?', [$month]);
         }
 
         if (isset($filter['year']) && $year = $filter['year']) {
